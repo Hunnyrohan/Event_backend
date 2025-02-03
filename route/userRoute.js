@@ -1,19 +1,12 @@
-// const express = require('express');
-// const router = express.Router();
-// const userController = require('../controller/userController');
-
-// router.post('/register', userController.register);
-// router.post('/login', userController.login);
-
-// module.exports = router;
-// filepath: /c:/Users/Acer/Desktop/Web development/backend/backend/route/userRoute.js
-// filepath: /c:/Users/Acer/Desktop/Web development/backend/backend/route/userRoute.js
 const express = require('express');
 const router = express.Router();
-const userController = require('../controller/userController'); // Ensure this path is correct
+const userController = require('../controller/userController');
 
-// Define your routes here
-router.get('/', userController.getAllUsers);
-router.post('/', userController.createUser);
+// Define user routes
+router.get('/', userController.getAllUsers); // GET all users
+router.get('/:id', userController.getUserById); // GET user by ID
+router.post('/', userController.createUser); // CREATE new user
+router.put('/:id', userController.updateUser); // UPDATE user
+router.delete('/:id', userController.deleteUser); // DELETE user
 
 module.exports = router;

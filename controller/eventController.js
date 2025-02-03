@@ -1,41 +1,65 @@
-// const Event = require('../models/eventModel'); // Ensure this path is correct
+// controller/eventController.js
+const Event = require('../models/eventModel');
 
-// exports.getAllEvents = async (req, res) => {
-//     // Your logic to get all events here
-// };
-
-// exports.createEvent = async (req, res) => {
-//     // Your logic to create an event here
-// };
-const Event = require('../models/eventModel'); // Ensure this path is correct
-
+// Get all events
 exports.getAllEvents = async (req, res) => {
     try {
         const events = await Event.findAll();
-        res.json(events);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(200).json(events);
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).json({ error: 'Server error' });
     }
 };
 
+// Create a new event
 exports.createEvent = async (req, res) => {
     try {
         const { name, date, location } = req.body;
+        const newEvent = await Event.create({ name, date, location });
+        res.status(201).json(newEvent);
+    } catch (error) {
+        console.error('Error creating event:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
 
-        if (!name || !date || !location) {
-            return res.status(400).json({ msg: 'Please provide all required fields' });
+// Update an event by ID
+exports.updateEvent = async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        const { name, date, location } = req.body;
+
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            return res.status(404).json({ error: 'Event not found' });
         }
 
-        const newEvent = await Event.create({
-            name,
-            date,
-            location
-        });
+        event.name = name;
+        event.date = date;
+        event.location = location;
+        await event.save();
 
-        res.json(newEvent);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(200).json(event);
+    } catch (error) {
+        console.error('Error updating event:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
+// Delete an event by ID
+exports.deleteEvent = async (req, res) => {
+    try {
+        const eventId = req.params.id;
+        const event = await Event.findByPk(eventId);
+        if (!event) {
+            return res.status(404).json({ error: 'Event not found' });
+        }
+
+        await event.destroy();
+        res.status(200).json({ message: 'Event deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        res.status(500).json({ error: 'Server error' });
     }
 };

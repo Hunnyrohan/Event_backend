@@ -1,12 +1,9 @@
+// models/eventModel.js
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../db'); // Ensure this path is correct
+const sequelize = require('../database/db');
 
+// Define the Event model
 const Event = sequelize.define('Event', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -19,9 +16,9 @@ const Event = sequelize.define('Event', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-}, {
-    timestamps: true,
-    tableName: 'user',
 });
+
+// Sync the model to the database (create table if not exists)
+sequelize.sync();
 
 module.exports = Event;

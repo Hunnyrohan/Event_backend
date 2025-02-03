@@ -1,9 +1,12 @@
+// routes/eventRoute.js
 const express = require('express');
 const router = express.Router();
-const eventController = require('../controller/eventController'); // Ensure this path is correct
+const eventController = require('../controller/eventController');
 
-// Define your routes here
-router.get('/login', eventController.getAllEvents);
-router.post('/', eventController.createEvent);
+// Event routes
+router.get('/events', eventController.getAllEvents);
+router.post('/events', eventController.createEvent);
+router.put('/events/:id', eventController.updateEvent);
+router.delete('/events/:id', eventController.deleteEvent);
 
 module.exports = router;
