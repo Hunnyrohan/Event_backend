@@ -6,7 +6,7 @@ const authRoutes = require('./routes/auth');
 const serviceRoutes = require('./routes/services');
 const bookingRoutes = require('./routes/bookings');
 const venueRoutes = require('./routes/Venues');
-const db = require('./config/db');
+const db = require('./config/db'); // Ensure this path is correct
 
 const app = express();
 
@@ -20,14 +20,20 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/venues', venueRoutes);
 
-// Database connection
-db.authenticate()
-  .then(() => {
-    console.log('Database connected successfully.');
-  })
-  .catch(err => {
-    console.error('Error connecting to the database:', err);
-  });
+// Test DB connection
+db.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('Error connecting to the database', err.stack);
+  } else {
+    console.log('Database connected:', res.rows[0]);
+  }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err); // Log the error
+  res.status(500).json({ message: 'An internal server error occurred.' });
+});
 
 // Start server
 const PORT = process.env.PORT || 5000;
